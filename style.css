@@ -206,6 +206,7 @@ body {
   display: none;
   padding: 36px 44px 64px;
   max-width: 960px;
+  margin: 0 auto;
   animation: fadeIn 0.18s ease;
 }
 
