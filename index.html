@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CUDA คู่มือฉบับภาษาไทย</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <span class="logo-icon">⚡</span>
+        <div>
+          <div class="logo-title">CUDA 2027</div>
+          <div class="logo-sub">คู่มือภาษาไทย</div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-section-label">เริ่มต้น</div>
+      <a class="nav-item active" data-page="overview" onclick="showPage('overview')">
+        <span class="nav-icon">🏠</span> ภาพรวม
+      </a>
+
+      <div class="nav-section-label">แนวคิดหลัก</div>
+      <a class="nav-item" data-page="programming-model" onclick="showPage('programming-model')">
+        <span class="nav-icon">📐</span> โมเดลการโปรแกรม CUDA
+      </a>
+      <a class="nav-item" data-page="execution-model" onclick="showPage('execution-model')">
+        <span class="nav-icon">⚙️</span> โมเดลการรัน (SIMT)
+      </a>
+      <a class="nav-item" data-page="memory-hierarchy" onclick="showPage('memory-hierarchy')">
+        <span class="nav-icon">💾</span> ลำดับชั้นหน่วยความจำ
+      </a>
+      <a class="nav-item" data-page="memory-coalescing" onclick="showPage('memory-coalescing')">
+        <span class="nav-icon">🔗</span> Memory Coalescing
+      </a>
+      <a class="nav-item" data-page="shared-memory" onclick="showPage('shared-memory')">
+        <span class="nav-icon">🧩</span> Shared Memory & Tiling
+      </a>
+
+      <div class="nav-section-label">การทำงานพร้อมกัน</div>
+      <a class="nav-item" data-page="streams-events" onclick="showPage('streams-events')">
+        <span class="nav-icon">🌊</span> Streams & Events
+      </a>
+      <a class="nav-item" data-page="async-barriers" onclick="showPage('async-barriers')">
+        <span class="nav-icon">⏳</span> Async Barriers & Pipelines
+      </a>
+
+      <div class="nav-section-label">การปรับแต่งประสิทธิภาพ</div>
+      <a class="nav-item" data-page="occupancy" onclick="showPage('occupancy')">
+        <span class="nav-icon">📊</span> Occupancy Optimization
+      </a>
+      <a class="nav-item" data-page="multi-gpu" onclick="showPage('multi-gpu')">
+        <span class="nav-icon">🖥️</span> Multi-GPU Programming
+      </a>
+
+      <div class="nav-section-label">ฮาร์ดแวร์อ้างอิง</div>
+      <a class="nav-item" data-page="compute-caps" onclick="showPage('compute-caps')">
+        <span class="nav-icon">📋</span> Compute Capabilities
+      </a>
+      <a class="nav-item" data-page="h100" onclick="showPage('h100')">
+        <span class="nav-icon">🚀</span> NVIDIA H100
+      </a>
+      <a class="nav-item" data-page="a100" onclick="showPage('a100')">
+        <span class="nav-icon">💡</span> NVIDIA A100
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="stats">
+        <span>38 หน้า</span> · <span>2 แหล่งข้อมูล</span>
+      </div>
+      <div class="update-date">อัปเดต: 17 เมษายน 2569</div>
+    </div>
+  </aside>
+
+  <!-- Mobile toggle -->
+  <button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()">☰</button>
+
+  <!-- Main content -->
+  <main class="main" id="main">
+    <div class="topbar">
+      <div class="breadcrumb" id="breadcrumb">ภาพรวม</div>
+      <div class="search-wrap">
+        <input class="search-input" id="searchInput" type="text" placeholder="🔍  ค้นหาหัวข้อ...">
+      </div>
+    </div>
+
+    <!-- ========== OVERVIEW ========== -->
+    <div class="page active" id="page-overview">
+      <div class="page-hero">
+        <div class="hero-badge">คู่มือ CUDA ฉบับภาษาไทย</div>
+        <h1 class="hero-title">CUDA-IN-2027</h1>
+        <p class="hero-sub">ฐานความรู้ส่วนตัวด้าน CUDA, การโปรแกรม GPU และการคำนวณแบบขนาน<br>แปลและสังเคราะห์จาก NVIDIA CUDA Programming Guide อย่างเป็นทางการ</p>
+        <div class="hero-stats">
+          <div class="stat-card"><div class="stat-num">38</div><div class="stat-label">หน้าในวิกิ</div></div>
+          <div class="stat-card"><div class="stat-num">9</div><div class="stat-label">แนวคิดหลัก</div></div>
+          <div class="stat-card"><div class="stat-num">3</div><div class="stat-label">GPU อ้างอิง</div></div>
+          <div class="stat-card"><div class="stat-num">50+</div><div class="stat-label">ไฟล์ต้นฉบับ</div></div>
+        </div>
+      </div>
+
+      <div class="section-title">วิทยานิพนธ์หลัก</div>
+      <div class="callout callout-blue">
+        <div class="callout-title">💡 แนวคิดกลาง</div>
+        การปรับแต่งประสิทธิภาพ GPU เป็นปัญหาสองมิติ: <strong>ความขนาน</strong> และ <strong>หน่วยความจำ</strong><br><br>
+        โมเดลการโปรแกรม CUDA ให้โครงสร้างสำหรับแสดงความขนาน (thread → warp → block → grid → cluster) ส่วนลำดับชั้นหน่วยความจำให้ทรัพยากรที่จำเป็น <strong>เทคนิคการปรับแต่งทุกอย่าง</strong> — coalescing, tiling, occupancy, async barriers, stream concurrency — ล้วนเป็นกลยุทธ์ในการเพิ่มการใช้งานหน่วยความจำและความขนานพร้อมกัน
+      </div>
+
+      <div class="section-title">แผนผังแนวคิด</div>
+      <div class="concept-map">
+        <div class="concept-col">
+          <div class="concept-col-title">🔀 ชั้นความขนาน</div>
+          <div class="concept-row"><span class="badge-green">Thread</span> หน่วยพื้นฐาน</div>
+          <div class="concept-row"><span class="badge-green">Warp</span> 32 threads — รันพร้อมกัน</div>
+          <div class="concept-row"><span class="badge-green">Block</span> บน SM เดียวกัน</div>
+          <div class="concept-row"><span class="badge-green">Grid</span> กระจายทุก SM</div>
+          <div class="concept-row"><span class="badge-purple">Cluster</span> CC 9.0+ (Hopper)</div>
+        </div>
+        <div class="concept-col">
+          <div class="concept-col-title">💾 ชั้นหน่วยความจำ</div>
+          <div class="concept-row"><span class="badge-yellow">Register</span> ~1 cycle</div>
+          <div class="concept-row"><span class="badge-yellow">Shared / L1</span> ~20–40 cycle</div>
+          <div class="concept-row"><span class="badge-orange">L2 Cache</span> ~200 cycle</div>
+          <div class="concept-row"><span class="badge-red">Global (HBM)</span> 400–800 cycle</div>
+          <div class="concept-row"><span class="badge-red">Constant</span> 64 KB, read-only</div>
+        </div>
+        <div class="concept-col">
+          <div class="concept-col-title">⚡ เทคนิคสำคัญ</div>
+          <div class="concept-row">🔗 Memory Coalescing</div>
+          <div class="concept-row">🧩 Shared Memory Tiling</div>
+          <div class="concept-row">📊 Occupancy Optimization</div>
+          <div class="concept-row">⏳ Async Copy (LDGSTS/TMA)</div>
+          <div class="concept-row">🌊 Stream Overlap</div>
+        </div>
+      </div>
+
+      <div class="section-title">แนวคิดหลักทั้งหมด</div>
+      <div class="card-grid">
+        <div class="card" onclick="showPage('programming-model')">
+          <div class="card-icon">📐</div>
+          <div class="card-title">โมเดลการโปรแกรม CUDA</div>
+          <div class="card-desc">Thread/Block/Grid, kernel launch, built-in variables, warp formation, clusters (CC 9.0+)</div>
+        </div>
+        <div class="card" onclick="showPage('execution-model')">
+          <div class="card-icon">⚙️</div>
+          <div class="card-title">โมเดลการรัน SIMT</div>
+          <div class="card-desc">SIMT, warp scheduling, divergence, independent thread scheduling (CC 7.0+), thread scopes</div>
+        </div>
+        <div class="card" onclick="showPage('memory-hierarchy')">
+          <div class="card-icon">💾</div>
+          <div class="card-title">ลำดับชั้นหน่วยความจำ GPU</div>
+          <div class="card-desc">หน่วยความจำ 6 ระดับ: latency, bandwidth, ความจุ, และ occupancy tradeoffs</div>
+        </div>
+        <div class="card" onclick="showPage('memory-coalescing')">
+          <div class="card-icon">🔗</div>
+          <div class="card-title">Memory Coalescing</div>
+          <div class="card-desc">การรวม memory transaction ระดับ warp — ประสิทธิภาพลด 32x ถ้าไม่ coalesce</div>
+        </div>
+        <div class="card" onclick="showPage('shared-memory')">
+          <div class="card-icon">🧩</div>
+          <div class="card-title">Shared Memory & Tiling</div>
+          <div class="card-desc">SRAM on-chip สำหรับ pattern "โหลดครั้งเดียว ใช้หลายครั้ง" — bank conflicts, syncthreads</div>
+        </div>
+        <div class="card" onclick="showPage('streams-events')">
+          <div class="card-icon">🌊</div>
+          <div class="card-title">Streams & Events</div>
+          <div class="card-desc">การรันแบบ async, ทับซ้อน host-device, cross-stream synchronization</div>
+        </div>
+        <div class="card" onclick="showPage('occupancy')">
+          <div class="card-icon">📊</div>
+          <div class="card-title">Occupancy Optimization</div>
+          <div class="card-desc">Register/shared memory limits, สูตร occupancy, __launch_bounds__, tradeoffs</div>
+        </div>
+        <div class="card" onclick="showPage('async-barriers')">
+          <div class="card-icon">⏳</div>
+          <div class="card-title">Async Barriers & Pipelines</div>
+          <div class="card-desc">cuda::barrier arrive/wait, LDGSTS (CC 8.0+), TMA (CC 9.0+), double-buffering</div>
+        </div>
+        <div class="card" onclick="showPage('multi-gpu')">
+          <div class="card-icon">🖥️</div>
+          <div class="card-title">Multi-GPU Programming</div>
+          <div class="card-desc">P2P transfers, NVLink, IPC, NCCL, NVSHMEM — การกระจายงานหลาย GPU</div>
+        </div>
+      </div>
+
+      <div class="section-title">ข้อสังเกตสำคัญ (Contradictions)</div>
+      <div class="callout callout-orange">
+        <div class="callout-title">⚠️ Texture Memory — ข้อมูลเก่าใน source แรก</div>
+        <strong>cuda-memory-hierarchy-primer</strong> (source แรก) ระบุว่า Texture Memory ยังมีประโยชน์บางกรณี<br>
+        แต่ <strong>CUDA Programming Guide อย่างเป็นทางการ (ch2-2)</strong> ระบุชัดเจนว่า:<br>
+        <em>"texture and surface memory instructions no longer provide any performance benefit on any currently supported NVIDIA GPU"</em><br><br>
+        → <strong>Official Guide ถูกต้อง</strong> ไม่ควรใช้ Texture Memory สำหรับโปรแกรม CUDA ใหม่
+      </div>
+    </div>
+
+    <!-- ========== PROGRAMMING MODEL ========== -->
+    <div class="page" id="page-programming-model">
+      <h1 class="page-title">📐 โมเดลการโปรแกรม CUDA</h1>
+      <p class="page-lead">โมเดลการโปรแกรม CUDA กำหนดวิธีที่ซอฟต์แวร์แสดงความขนานเพื่อรันบน GPU ของ NVIDIA เป็นโมเดล heterogeneous: โค้ดเริ่มต้นที่ CPU แล้วส่งงานไปยัง GPU</p>
+
+      <div class="section-title">ระบบ Heterogeneous</div>
+      <div class="two-col">
+        <div class="info-card">
+          <div class="info-card-title">🖥️ Host (CPU)</div>
+          CPU และ DRAM ที่เชื่อมต่อโดยตรง (System Memory) — โค้ดเริ่มต้นที่นี่เสมอ เรียกใช้ CUDA API เพื่อส่งงานไป GPU
+        </div>
+        <div class="info-card">
+          <div class="info-card-title">⚡ Device (GPU)</div>
+          GPU และ DRAM ที่เชื่อมต่อโดยตรง (Device Memory / HBM) — รัน Kernel ที่ launch จาก Host
+        </div>
+      </div>
+
+      <div class="section-title">ลำดับชั้น Thread (Thread Hierarchy)</div>
+      <div class="hierarchy-viz">
+        <div class="hier-level" style="--depth:0; --color:#6366f1">
+          <span class="hier-label">Grid</span>
+          <span class="hier-desc">ชุด Block ทั้งหมดในการ launch kernel ครั้งเดียว — ขนาดสูงสุด (2³¹−1) × 65535 × 65535</span>
+        </div>
+        <div class="hier-level" style="--depth:1; --color:#8b5cf6">
+          <span class="hier-label">Thread Block</span>
+          <span class="hier-desc">Thread สูงสุด 1024 ตัว รันบน SM เดียวกัน — มี Shared Memory ร่วมกัน</span>
+        </div>
+        <div class="hier-level" style="--depth:2; --color:#a78bfa">
+          <span class="hier-label">Warp</span>
+          <span class="hier-desc">32 threads — หน่วยการรันของ hardware รันคำสั่งเดียวกันพร้อมกัน (SIMT)</span>
+        </div>
+        <div class="hier-level" style="--depth:3; --color:#c4b5fd">
+          <span class="hier-label">Thread</span>
+          <span class="hier-desc">หน่วยพื้นฐาน มี registers และ execution context เป็นของตัวเอง</span>
+        </div>
+      </div>
+
+      <div class="callout callout-purple">
+        <div class="callout-title">🔮 Thread Block Clusters (Compute Capability 9.0+)</div>
+        ระดับใหม่ระหว่าง Grid และ Block — กลุ่ม Block ที่อยู่บน SM ใน GPC เดียวกัน<br>
+        เปิดใช้งาน <strong>Distributed Shared Memory</strong>: threads สามารถเข้าถึง shared memory ของ Block อื่นใน Cluster ได้ผ่าน <code>cluster.map_shared_rank()</code><br>
+        ต้องใช้ <code>cluster.sync()</code> สำหรับ synchronization ระดับ cluster
+      </div>
+
+      <div class="section-title">Syntax การ Launch Kernel</div>
+      <div class="code-block">
+        <div class="code-header"><span>CUDA C++</span></div>
+        <pre><code>// ไวยากรณ์ triple-chevron: &lt;&lt;&lt;grid_dims, block_dims, shared_mem_bytes, stream&gt;&gt;&gt;
+myKernel&lt;&lt;&lt;gridDim, blockDim, sharedMemBytes, stream&gt;&gt;&gt;(args...);
+
+// ตัวอย่างจริง: GEMM kernel
+dim3 grid(M/TILE, N/TILE);          // กี่ block ใน grid
+dim3 block(TILE, TILE);              // กี่ thread ใน block
+gemmKernel&lt;&lt;&lt;grid, block, 0, stream&gt;&gt;&gt;(A, B, C, M, N, K);</code></pre>
+      </div>
+
+      <div class="section-title">Built-in Variables ภายใน Kernel</div>
+      <table class="data-table">
+        <thead><tr><th>Variable</th><th>ความหมาย</th><th>ตัวอย่างการใช้</th></tr></thead>
+        <tbody>
+          <tr><td><code>threadIdx.{x,y,z}</code></td><td>ตำแหน่ง thread ภายใน block</td><td>ระบุว่า thread นี้ทำงานกับ data ชิ้นไหน</td></tr>
+          <tr><td><code>blockIdx.{x,y,z}</code></td><td>ตำแหน่ง block ภายใน grid</td><td>ระบุว่า block นี้อยู่ส่วนไหนของ matrix</td></tr>
+          <tr><td><code>blockDim.{x,y,z}</code></td><td>ขนาดของ block</td><td>ใช้คำนวณ global index</td></tr>
+          <tr><td><code>gridDim.{x,y,z}</code></td><td>ขนาดของ grid</td><td>ใช้ใน stride loop</td></tr>
+          <tr><td><code>warpSize</code></td><td>ขนาด warp (ค่าคงที่ = 32)</td><td>ใช้ใน warp-level primitives</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-green">
+        <div class="callout-title">✅ กฎสำคัญ: Block อิสระจากกัน</div>
+        Thread block ต้องรันได้โดยไม่ขึ้นกับ block อื่น — ไม่มีลำดับการรันที่รับประกัน ไม่มี cross-block synchronization (ยกเว้น Cooperative Groups)<br>
+        นี่คือเหตุผลที่ CUDA scaling จาก GPU 1 SM ถึง 1000 SM ด้วย binary เดียวกัน
+      </div>
+
+      <div class="section-title">ตัวอย่าง: Vector Addition</div>
+      <div class="code-block">
+        <div class="code-header"><span>CUDA C++</span></div>
+        <pre><code>__global__ void vecAdd(float* A, float* B, float* C, int n) {
+    // คำนวณ index ของ thread นี้ใน array
+    int idx = threadIdx.x + blockIdx.x * blockDim.x;
+    if (idx &lt; n) {
+        C[idx] = A[idx] + B[idx];
+    }
+}
+
+// เรียกใช้จาก host:
+int blockSize = 256;
+int gridSize  = (n + blockSize - 1) / blockSize;  // ceiling division
+vecAdd&lt;&lt;&lt;gridSize, blockSize&gt;&gt;&gt;(d_A, d_B, d_C, n);</code></pre>
+      </div>
+    </div>
+
+    <!-- ========== EXECUTION MODEL ========== -->
+    <div class="page" id="page-execution-model">
+      <h1 class="page-title">⚙️ โมเดลการรัน CUDA (SIMT)</h1>
+      <p class="page-lead">โมเดลการรัน CUDA กำหนดว่า thread ถูก schedule, รัน, และ synchronize กันอย่างไรบน GPU hardware — หน่วยฮาร์ดแวร์หลักคือ <strong>warp</strong> ซึ่งเป็น 32 threads ที่รัน lockstep ภายใต้ SIMT</p>
+
+      <div class="section-title">SIMT คืออะไร?</div>
+      <div class="two-col">
+        <div class="info-card">
+          <div class="info-card-title">SIMT (Single-Instruction Multiple-Thread)</div>
+          <ul>
+            <li>Thread 32 ตัวใน warp รัน <strong>คำสั่งเดียวกัน</strong> พร้อมกัน</li>
+            <li>แต่ละ thread มี <strong>program counter, register, call stack เป็นของตัวเอง</strong> (CC 7.0+)</li>
+            <li>Thread สามารถแยก branch ได้ แต่จะถูก serialize</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <div class="info-card-title">SIMD vs SIMT</div>
+          <ul>
+            <li><strong>SIMD</strong>: expose ความกว้างของ vector ให้ software — programmer จัดการ lane เอง</li>
+            <li><strong>SIMT</strong>: programmer เขียนโค้ด per-thread แบบ scalar — hardware รวมเป็น SIMT เอง</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-title">Warp Scheduling</div>
+      <div class="callout callout-blue">
+        <div class="callout-title">🔄 Zero-Cost Context Switch</div>
+        SM เก็บ context ทั้งหมดของทุก warp ที่ active ไว้บน chip ตลอดเวลา<br>
+        การสลับ warp ใช้เวลา <strong>0 cycle</strong> — นี่คือวิธีที่ GPU ซ่อน memory latency:<br>
+        ขณะที่ warp A รอ global memory load (400–800 cycle) → warp scheduler รัน warp B, C, D แทน
+      </div>
+
+      <div class="section-title">Warp Divergence</div>
+      <div class="code-block">
+        <div class="code-header"><span>ตัวอย่าง — Divergence ที่ควรหลีกเลี่ยง</span></div>
+        <pre><code>// ❌ BAD: ครึ่ง warp idle ในแต่ละ branch
+if (threadIdx.x % 2 == 0) {
+    doHeavyWork_A();   // thread 0, 2, 4... active; thread 1, 3, 5... masked
+} else {
+    doHeavyWork_B();   // thread 1, 3, 5... active; thread 0, 2, 4... masked
+}
+// ทำให้ใช้เวลา 2x เมื่อเทียบกับ path เดียว
+
+// ✅ GOOD: ใช้ threadIdx.x ให้ threads ใน warp เดียวกันไป path เดียวกัน
+if (blockIdx.x % 2 == 0) {
+    doHeavyWork_A();   // ทุก thread ใน block ไป path เดียวกัน — ไม่มี divergence
+} else {
+    doHeavyWork_B();
+}</code></pre>
+      </div>
+
+      <div class="section-title">Independent Thread Scheduling (CC 7.0+)</div>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot old"></div>
+          <div class="timeline-content">
+            <div class="timeline-title">ก่อน CC 7.0 (Kepler, Maxwell, Pascal)</div>
+            PC เดียวสำหรับทั้ง warp — threads ใน divergent region ไม่สามารถส่งสัญญาณหากัน อาจ deadlock ได้
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot new"></div>
+          <div class="timeline-content">
+            <div class="timeline-title">CC 7.0+ (Volta, Turing, Ampere, Hopper, Blackwell)</div>
+            <strong>Independent Thread Scheduling</strong> — แต่ละ thread มี PC และ call stack เป็นของตัวเอง<br>
+            SM สามารถ yield thread ได้ระดับ per-thread<br>
+            Schedule optimizer จัดกลุ่ม active threads เป็น SIMT units เพื่อ throughput
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-orange">
+        <div class="callout-title">⚠️ Compatibility Warning</div>
+        โค้ดที่เขียนโดยสมมติว่า threads ใน warp รัน lockstep ทุก instruction (<em>warp-synchronous code</em>) อาจ<strong>ทำงานผิดพลาด</strong>บน CC 7.0+<br>
+        ต้องใช้ <code>__syncwarp()</code> อย่างชัดเจนสำหรับการ sync ภายใน warp
+      </div>
+
+      <div class="section-title">Thread Scopes</div>
+      <table class="data-table">
+        <thead><tr><th>Scope</th><th>PTX</th><th>Threads ที่เห็น operation</th><th>จุด coherency</th></tr></thead>
+        <tbody>
+          <tr><td><code>thread_scope_thread</code></td><td>—</td><td>thread ตัวเองเท่านั้น</td><td>—</td></tr>
+          <tr><td><code>thread_scope_block</code></td><td><code>.cta</code></td><td>ทุก thread ใน block เดียวกัน</td><td>L1</td></tr>
+          <tr><td>(cluster)</td><td><code>.cluster</code></td><td>ทุก thread ใน cluster เดียวกัน</td><td>L2</td></tr>
+          <tr><td><code>thread_scope_device</code></td><td><code>.gpu</code></td><td>ทุก thread บน GPU เดียวกัน</td><td>L2</td></tr>
+          <tr><td><code>thread_scope_system</code></td><td><code>.sys</code></td><td>ทุก thread ในระบบ (รวม CPU)</td><td>L2 + system caches</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ========== MEMORY HIERARCHY ========== -->
+    <div class="page" id="page-memory-hierarchy">
+      <h1 class="page-title">💾 ลำดับชั้นหน่วยความจำ GPU</h1>
+      <p class="page-lead">CUDA เปิดเผยลำดับชั้นหน่วยความจำ 6 ระดับที่ programmer ต้องจัดการอย่างชัดเจน (ไม่เหมือน CPU ที่ cache hierarchy โปร่งใส) — การเลือกใช้ memory space ที่เหมาะสมคือตัวแปรหลักของ kernel performance</p>
+
+      <div class="memory-pyramid">
+        <div class="mem-level registers">
+          <span class="mem-name">Registers</span>
+          <span class="mem-spec">~1 cycle · Per-thread · ไม่มี bus</span>
+        </div>
+        <div class="mem-level shared">
+          <span class="mem-name">Shared Memory / L1</span>
+          <span class="mem-spec">~20–40 cycle · Per-block (on-chip) · ~33 TB/s ต่อ SM</span>
+        </div>
+        <div class="mem-level l2">
+          <span class="mem-name">L2 Cache</span>
+          <span class="mem-spec">~200 cycle · Device-wide · ~12 TB/s · 50 MB (H100)</span>
+        </div>
+        <div class="mem-level global">
+          <span class="mem-name">Global Memory (HBM)</span>
+          <span class="mem-spec">400–800 cycle · Device-wide · 3.35 TB/s (H100 SXM)</span>
+        </div>
+        <div class="mem-level constant">
+          <span class="mem-name">Constant Memory</span>
+          <span class="mem-spec">~1 cycle (cached) · Read-only · 64 KB · 8 KB cache/SM</span>
+        </div>
+      </div>
+
+      <div class="section-title">ตารางเปรียบเทียบหน่วยความจำ</div>
+      <table class="data-table">
+        <thead>
+          <tr><th>Memory Space</th><th>Scope</th><th>Latency</th><th>ความจุ (H100)</th><th>จัดการโดย</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>Registers</code></td><td>Per-thread</td><td>~1 cycle</td><td>~256 KB/SM (แชร์ทุก thread)</td><td>Compiler</td></tr>
+          <tr><td><code>Shared Memory</code></td><td>Per-block</td><td>~20–40 cycle</td><td>0–228 KB/SM (configurable)</td><td>Programmer</td></tr>
+          <tr><td><code>L1 Cache</code></td><td>Per-SM</td><td>~30 cycle</td><td>แชร์กับ Shared Mem</td><td>Hardware</td></tr>
+          <tr><td><code>L2 Cache</code></td><td>Device-wide</td><td>~200 cycle</td><td>50 MB</td><td>HW + hints</td></tr>
+          <tr><td><code>Global (HBM)</code></td><td>Device-wide</td><td>400–800 cycle</td><td>80 GB</td><td>Programmer</td></tr>
+          <tr><td><code>Constant</code></td><td>Grid (read-only)</td><td>~1 cycle (cached)</td><td>64 KB</td><td>Programmer</td></tr>
+          <tr><td><code>Local</code></td><td>Per-thread</td><td>400–800 cycle</td><td>512 KB/thread (ใน Global)</td><td>Compiler</td></tr>
+        </tbody>
+      </table>
+
+      <div class="section-title">Bandwidth จริงบน H100 SXM</div>
+      <div class="bw-bars">
+        <div class="bw-row"><span class="bw-label">HBM3 (Global)</span><div class="bw-bar" style="width:34%"><span>3.35 TB/s</span></div></div>
+        <div class="bw-row"><span class="bw-label">L2 Cache</span><div class="bw-bar" style="width:55%"><span>~12 TB/s</span></div></div>
+        <div class="bw-row"><span class="bw-label">Shared Memory/SM</span><div class="bw-bar" style="width:100%"><span>~33 TB/s</span></div></div>
+      </div>
+
+      <div class="section-title">Occupancy Tradeoff: Shared Mem vs L1</div>
+      <div class="callout callout-orange">
+        <div class="callout-title">⚖️ Shared Memory ↔ L1 คือ Zero-Sum</div>
+        Shared memory และ L1 cache <strong>แชร์ physical space (Unified Data Cache)</strong> เดียวกันบน SM<br>
+        การใช้ shared memory มาก → L1 น้อยลง → อาจมี cache miss มากขึ้น<br>
+        ใช้ <code>cudaFuncSetAttribute(kernel, cudaFuncAttributePreferredSharedMemoryCarveout, pct)</code> เพื่อปรับสัดส่วน
+      </div>
+
+      <div class="section-title">Register Spilling</div>
+      <div class="callout callout-red">
+        <div class="callout-title">🚨 Register Spilling คือหายนะ</div>
+        เมื่อ kernel ใช้ register มากกว่าที่ SM มี → compiler spill register ไปยัง <strong>Local Memory</strong><br>
+        Local Memory อยู่ใน <strong>Global DRAM จริง ๆ</strong> (ไม่ใช่ on-chip) → latency เหมือน Global Memory (400–800 cycle)<br>
+        ป้องกันด้วย: <code>__launch_bounds__(maxThreads, minBlocks)</code> หรือ <code>--maxrregcount</code>
+      </div>
+    </div>
+
+    <!-- ========== MEMORY COALESCING ========== -->
+    <div class="page" id="page-memory-coalescing">
+      <h1 class="page-title">🔗 Memory Coalescing</h1>
+      <p class="page-lead">Memory coalescing คือการปรับแต่งที่ให้ผลมากที่สุดสำหรับ kernel ที่ถูก global-memory bound เมื่อ threads ใน warp เข้าถึง memory พร้อมกัน hardware สามารถรวม request เป็น transaction เดียวได้ — แต่ต้องเป็นที่อยู่ที่ต่อเนื่องกันเท่านั้น</p>
+
+      <div class="section-title">กฎพื้นฐาน</div>
+      <div class="two-col">
+        <div class="result-card good">
+          <div class="result-title">✅ Coalesced (ดี)</div>
+          <div class="result-desc">32 threads เข้าถึง 32 ที่อยู่ที่ต่อเนื่องกัน → hardware รวมเป็น <strong>1 transaction</strong> (128 bytes)</div>
+          <div class="code-mini"><code>A[threadIdx.x]  // thread 0→A[0], thread 1→A[1]...</code></div>
+          <div class="result-perf">Bandwidth: ~3.35 TB/s (peak)</div>
+        </div>
+        <div class="result-card bad">
+          <div class="result-title">❌ Uncoalesced (แย่)</div>
+          <div class="result-desc">32 threads เข้าถึง 32 ที่อยู่แบบสุ่ม → hardware ต้องทำ <strong>32 transactions แยกกัน</strong></div>
+          <div class="code-mini"><code>A[threadIdx.x * 32]  // stride ใหญ่เกินไป</code></div>
+          <div class="result-perf">Bandwidth: ~105 GB/s (ลดลง 32x!)</div>
+        </div>
+      </div>
+
+      <div class="section-title">ตัวอย่าง Pattern การเข้าถึง</div>
+      <table class="data-table">
+        <thead><tr><th>Pattern</th><th>ผลลัพธ์</th><th>เหตุผล</th></tr></thead>
+        <tbody>
+          <tr><td><code>A[threadIdx.x]</code></td><td class="good-cell">✅ Coalesced</td><td>ที่อยู่ต่อเนื่องกัน</td></tr>
+          <tr><td><code>A[threadIdx.x * 2]</code></td><td class="ok-cell">⚠️ บางส่วน</td><td>stride 2 — ประสิทธิภาพ 50%</td></tr>
+          <tr><td><code>A[threadIdx.x * 32]</code></td><td class="bad-cell">❌ Uncoalesced</td><td>stride ใหญ่ — 32 transactions</td></tr>
+          <tr><td>column access ใน row-major matrix</td><td class="bad-cell">❌ Uncoalesced</td><td>stride = N (ขนาด row)</td></tr>
+          <tr><td><code>A[index[threadIdx.x]]</code> แบบสุ่ม</td><td class="bad-cell">❌ Uncoalesced</td><td>gather pattern</td></tr>
+          <tr><td>ผ่าน Shared Memory staging</td><td class="good-cell">✅ Coalesced</td><td>load ผ่าน shared memory ก่อน</td></tr>
+        </tbody>
+      </table>
+
+      <div class="section-title">กรณีศึกษา: Matrix Transpose</div>
+      <div class="code-block">
+        <div class="code-header"><span>Matrix Transpose — ใช้ Shared Memory แก้ Uncoalesced Write</span></div>
+        <pre><code>// Shared memory padding เพื่อแก้ทั้ง bank conflict และ uncoalesced write
+__global__ void smem_transpose(int m, float *a, float *c) {
+    // +1 คือ padding เพื่อหลีกเลี่ยง bank conflict (ดูหน้า Shared Memory)
+    __shared__ float smem[32][33];
+
+    int tileCol = blockDim.x * blockIdx.x;
+    int tileRow = blockDim.y * blockIdx.y;
+
+    // READ จาก global: threadIdx.x เปลี่ยนเร็ว → Coalesced ✅
+    smem[threadIdx.x][threadIdx.y] = a[(tileRow + threadIdx.y)*m + (tileCol + threadIdx.x)];
+    __syncthreads();
+
+    // WRITE ไป global: threadIdx.x เปลี่ยนเร็ว → Coalesced ✅
+    c[(tileCol + threadIdx.y)*m + (tileRow + threadIdx.x)] = smem[threadIdx.y][threadIdx.x];
+}</code></pre>
+      </div>
+
+      <div class="section-title">วิธีวินิจฉัย</div>
+      <div class="callout callout-blue">
+        <div class="callout-title">🔍 Nsight Compute</div>
+        ดูที่ <strong>Memory Workload Analysis</strong> → <em>Global Memory Load/Store Efficiency</em><br>
+        Metric: <code>l1tex__t_bytes / l1tex__t_sectors × 32</code> — ถ้า ratio ต่ำแสดงว่า uncoalesced<br>
+        เป้าหมาย: efficiency > 80%
+      </div>
+    </div>
+
+    <!-- ========== SHARED MEMORY ========== -->
+    <div class="page" id="page-shared-memory">
+      <h1 class="page-title">🧩 Shared Memory & Tiling</h1>
+      <p class="page-lead">Shared Memory คือ on-chip SRAM บน SM — latency ~20–40 cycle เทียบกับ Global Memory 400–800 cycle Pattern <strong>Tiling</strong> คือเทคนิคหลักที่ใช้ประโยชน์จาก shared memory: โหลด data จาก global มาที่ shared memory ครั้งเดียว แล้วนำมาใช้ซ้ำหลายครั้ง</p>
+
+      <div class="section-title">Pattern Tiling (แม่แบบหลัก)</div>
+      <div class="code-block">
+        <div class="code-header"><span>Pattern พื้นฐาน</span></div>
+        <pre><code>for (int tile = 0; tile &lt; K/TILE; tile++) {
+    // 1. โหลด tile จาก global → shared memory (cooperative: แต่ละ thread โหลด 1 element)
+    smem[threadIdx.y][threadIdx.x] = A[row * K + tile * TILE + threadIdx.x];
+    smem2[threadIdx.y][threadIdx.x] = B[(tile * TILE + threadIdx.y) * N + col];
+
+    // 2. รอให้ทุก thread โหลดเสร็จก่อน (สำคัญมาก!)
+    __syncthreads();
+
+    // 3. คำนวณโดยใช้ data ใน shared memory (เร็วกว่า global 10–20x)
+    for (int k = 0; k &lt; TILE; k++) {
+        sum += smem[threadIdx.y][k] * smem2[k][threadIdx.x];
+    }
+
+    // 4. รอให้ compute เสร็จก่อน tile ถัดไปจะ overwrite shared mem
+    __syncthreads();
+}</code></pre>
+      </div>
+
+      <div class="section-title">ทำไม Tiling ถึงช่วย?</div>
+      <div class="two-col">
+        <div class="info-card">
+          <div class="info-card-title">❌ Naive (ไม่มี Tiling)</div>
+          สำหรับ GEMM M×K × K×N: แต่ละ thread อ่าน K elements จาก A และ K จาก B<br>
+          รวม global reads: <strong>2MNK</strong>
+        </div>
+        <div class="info-card">
+          <div class="info-card-title">✅ Tiled (Tile size = T)</div>
+          แต่ละ block โหลด tile T×T ครั้งเดียวสำหรับทุกการคำนวณใน tile<br>
+          รวม global reads: <strong>2MNK/T</strong> → ลดลง <strong>T เท่า!</strong><br>
+          สำหรับ T=32: ประสิทธิภาพเพิ่มขึ้น 32 เท่า
+        </div>
+      </div>
+
+      <div class="section-title">Bank Conflicts</div>
+      <p>Shared memory แบ่งเป็น <strong>32 banks</strong> (interleaved ทุก 4 bytes) หาก threads ใน warp เดียวกันเข้าถึง bank เดียวกันพร้อมกัน → serialized (penalty)</p>
+      <table class="data-table">
+        <thead><tr><th>Pattern การเข้าถึง</th><th>ผลลัพธ์</th><th>เหตุผล</th></tr></thead>
+        <tbody>
+          <tr><td><code>smem[threadIdx.x]</code></td><td class="good-cell">✅ ไม่มี conflict</td><td>thread 0→bank0, thread 1→bank1...</td></tr>
+          <tr><td><code>smem[threadIdx.x * 2]</code></td><td class="ok-cell">⚠️ 2-way conflict</td><td>16 คู่แชร์ bank กัน</td></tr>
+          <tr><td><code>smem[threadIdx.x * 32]</code></td><td class="bad-cell">❌ 32-way conflict</td><td>ทุก thread อยู่ bank 0</td></tr>
+          <tr><td>ทุก thread อ่าน <code>smem[0]</code></td><td class="good-cell">✅ Broadcast</td><td>hardware broadcast → ไม่ conflict</td></tr>
+        </tbody>
+      </table>
+
+      <div class="section-title">แก้ Bank Conflict ด้วย Padding</div>
+      <div class="code-block">
+        <div class="code-header"><span>เทคนิค +1 Padding</span></div>
+        <pre><code>// ❌ มี bank conflict เมื่อเข้าถึง column
+__shared__ float smem[32][32];
+
+// ✅ เพิ่ม 1 column เพื่อ shift bank alignment
+__shared__ float smem[32][33];  // +1 padding
+// ตอนนี้การเข้าถึง column ไม่ conflict แล้ว เพราะแต่ละ row shift ไป 4 bytes</code></pre>
+      </div>
+
+      <div class="section-title">การ Allocate Shared Memory</div>
+      <div class="code-block">
+        <div class="code-header"><span>Static vs Dynamic Allocation</span></div>
+        <pre><code>// Static: ขนาดกำหนดตอน compile
+__global__ void kernel() {
+    __shared__ float smem[1024];   // 4 KB
+    // ...
+}
+
+// Dynamic: กำหนดตอน launch (flexible แต่ต้องระวัง alignment)
+__global__ void kernel() {
+    extern __shared__ float smem[];   // ขนาดจาก arg ที่ 3 ของ <<<>>>
+    // ...
+}
+// การเรียก:
+kernel&lt;&lt;&lt;grid, block, 1024 * sizeof(float)&gt;&gt;&gt;();</code></pre>
+      </div>
+    </div>
+
+    <!-- ========== STREAMS & EVENTS ========== -->
+    <div class="page" id="page-streams-events">
+      <h1 class="page-title">🌊 CUDA Streams & Events</h1>
+      <p class="page-lead">Streams และ Events เป็น abstraction หลักสำหรับการรันแบบ asynchronous concurrent — ช่วยให้ทับซ้อน: host computation, device computation, memory transfers H→D, D→H, และ peer-to-peer ได้พร้อมกัน</p>
+
+      <div class="section-title">Stream คืออะไร?</div>
+      <div class="callout callout-blue">
+        <div class="callout-title">🌊 Stream = Work Queue แบบ In-Order</div>
+        operations ใน stream เดียวกันรัน <strong>ตามลำดับที่ enqueue</strong><br>
+        operations ใน stream ต่างกันรันได้ <strong>พร้อมกัน</strong> (ขึ้นกับ hardware resources)<br>
+        Kernel launch และ memory copy ใน stream <strong>return ทันที</strong> (asynchronous กับ host)
+      </div>
+
+      <div class="code-block">
+        <div class="code-header"><span>การสร้างและใช้งาน Stream</span></div>
+        <pre><code>cudaStream_t stream1, stream2;
+cudaStreamCreate(&stream1);
+cudaStreamCreate(&stream2);
+
+// Ping-Pong pattern: ทำงาน 2 stream ทับซ้อนกัน
+cudaMemcpyAsync(d_A, h_A, size, cudaMemcpyHostToDevice, stream1);  // copy chunk A
+cudaMemcpyAsync(d_B, h_B, size, cudaMemcpyHostToDevice, stream2);  // copy chunk B พร้อมกัน!
+
+processKernel&lt;&lt;&lt;grid, block, 0, stream1&gt;&gt;&gt;(d_A, d_out1);  // process A
+processKernel&lt;&lt;&lt;grid, block, 0, stream2&gt;&gt;&gt;(d_B, d_out2);  // process B พร้อมกัน!
+
+cudaStreamSynchronize(stream1);
+cudaStreamSynchronize(stream2);
+
+cudaStreamDestroy(stream1);
+cudaStreamDestroy(stream2);</code></pre>
+      </div>
+
+      <div class="section-title">Default Stream (NULL Stream)</div>
+      <table class="data-table">
+        <thead><tr><th>ประเภท Stream</th><th>สร้างด้วย</th><th>behavior กับ NULL stream</th></tr></thead>
+        <tbody>
+          <tr><td>Blocking (default)</td><td><code>cudaStreamCreate()</code></td><td>sync กับ NULL stream — ทำให้ serialize โดยไม่ตั้งใจ</td></tr>
+          <tr><td>Non-blocking</td><td><code>cudaStreamCreateWithFlags(s, cudaStreamNonBlocking)</code></td><td>อิสระจาก NULL stream — แนะนำสำหรับ production</td></tr>
+          <tr><td>Per-thread default</td><td>flag <code>--default-stream per-thread</code></td><td>แต่ละ host thread มี default stream ของตัวเอง</td></tr>
+        </tbody>
+      </table>
+
+      <div class="section-title">Events — สำหรับ Timing และ Cross-Stream Sync</div>
+      <div class="code-block">
+        <div class="code-header"><span>การวัดเวลา Kernel ด้วย Events</span></div>
+        <pre><code>cudaEvent_t start, stop;
+cudaEventCreate(&start);
+cudaEventCreate(&stop);
+
+cudaEventRecord(start, stream);         // บันทึกเวลาเริ่ม
+myKernel&lt;&lt;&lt;grid, block, 0, stream&gt;&gt;&gt;(args);
+cudaEventRecord(stop, stream);          // บันทึกเวลาหยุด
+
+cudaStreamSynchronize(stream);          // รอให้ stop event เสร็จ
+
+float ms;
+cudaEventElapsedTime(&ms, start, stop); // คำนวณเวลาเป็น millisecond
+printf("Kernel time: %.3f ms\n", ms);
+
+cudaEventDestroy(start);
+cudaEventDestroy(stop);</code></pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header"><span>Cross-Stream Dependency ด้วย Events</span></div>
+        <pre><code>// บังคับให้ stream2 รอจน stream1 ถึง event
+cudaEventRecord(event, stream1);
+cudaStreamWaitEvent(stream2, event, 0);
+// operations ที่ enqueue stream2 หลังจากนี้จะรอ event ใน stream1 ก่อน</code></pre>
+      </div>
+
+      <div class="section-title">Pinned Memory สำหรับ Async Copy</div>
+      <div class="callout callout-orange">
+        <div class="callout-title">⚠️ Host Memory ต้องเป็น Pinned สำหรับ Async จริง</div>
+        <code>cudaMemcpyAsync()</code> กับ pageable host memory จะ <strong>fallback เป็น synchronous</strong><br>
+        ต้องใช้ <code>cudaMallocHost(&ptr, size)</code> เพื่อ allocate pinned memory<br>
+        (trade-off: pinned memory ลด available RAM สำหรับ OS)
+      </div>
+    </div>
+
+    <!-- ========== OCCUPANCY ========== -->
+    <div class="page" id="page-occupancy">
+      <h1 class="page-title">📊 Occupancy Optimization</h1>
+      <p class="page-lead"><strong>Occupancy</strong> = (active warps per SM) ÷ (maximum resident warps per SM) — การมี occupancy สูงช่วยซ่อน memory latency: ขณะที่ warp หนึ่งรอ memory อีก warp จะรันแทน</p>
+
+      <div class="section-title">ขีดจำกัด 3 ด้านที่กำหนด Occupancy</div>
+      <div class="three-col">
+        <div class="limit-card">
+          <div class="limit-icon">🗂️</div>
+          <div class="limit-title">Registers</div>
+          <div class="limit-body">65,536 registers ต่อ SM (ทุก CC)<br>Max 255 ต่อ thread<br>หาร (regs/thread × threads/block)</div>
+        </div>
+        <div class="limit-card">
+          <div class="limit-icon">💾</div>
+          <div class="limit-title">Shared Memory</div>
+          <div class="limit-body">ขึ้นกับ CC (64–228 KB/SM)<br>หาร smem/block ออกจาก smem/SM<br>ได้จำนวน block สูงสุด</div>
+        </div>
+        <div class="limit-card">
+          <div class="limit-icon">🔢</div>
+          <div class="limit-title">Hardware Limits</div>
+          <div class="limit-body">Max blocks/SM (16–32)<br>Max warps/SM (32–64)<br>Max threads/SM (1024–2048)</div>
+        </div>
+      </div>
+
+      <div class="section-title">ตารางขีดจำกัดต่อ CC</div>
+      <table class="data-table">
+        <thead><tr><th>CC</th><th>Max Blocks/SM</th><th>Max Warps/SM</th><th>Max Threads/SM</th><th>Shared Mem/SM</th></tr></thead>
+        <tbody>
+          <tr><td>7.5 (Turing)</td><td>16</td><td>32</td><td>1,024</td><td>64 KB</td></tr>
+          <tr><td>8.0 (Ampere A100)</td><td>32</td><td>64</td><td>2,048</td><td>164 KB</td></tr>
+          <tr><td>8.6 (Ampere RTX)</td><td>16</td><td>48</td><td>1,536</td><td>100 KB</td></tr>
+          <tr><td>8.9 (Ada/Ampere)</td><td>24</td><td>48</td><td>1,536</td><td>100 KB</td></tr>
+          <tr><td>9.0 (Hopper H100)</td><td>32</td><td>64</td><td>2,048</td><td>228 KB</td></tr>
+          <tr><td>10.x (Blackwell)</td><td>32</td><td>64</td><td>2,048</td><td>228 KB</td></tr>
+        </tbody>
+      </table>
+
+      <div class="section-title">เครื่องมือคำนวณ Occupancy</div>
+      <div class="code-block">
+        <div class="code-header"><span>API สำหรับหา Block Size ที่ดีที่สุด</span></div>
+        <pre><code>// ให้ CUDA runtime หา block size ที่ maximize occupancy ให้อัตโนมัติ
+int minGridSize, blockSize;
+cudaOccupancyMaxPotentialBlockSize(
+    &minGridSize,      // grid size ขั้นต่ำที่แนะนำ
+    &blockSize,        // block size ที่ maximize occupancy
+    myKernel,          // kernel function
+    sharedMemBytes,    // shared memory ต่อ block
+    0                  // dynamic shared mem limit (0 = ไม่จำกัด)
+);
+myKernel&lt;&lt;&lt;minGridSize, blockSize, sharedMemBytes&gt;&gt;&gt;(args);
+
+// ดู register และ shared memory ที่ kernel ใช้
+nvcc --resource-usage mykernel.cu</code></pre>
+      </div>
+
+      <div class="section-title">ควบคุม Register Usage</div>
+      <div class="code-block">
+        <div class="code-header"><span>__launch_bounds__</span></div>
+        <pre><code>// บอก compiler ว่า kernel นี้ launch ด้วย thread สูงสุด 256 ตัว/block
+// และต้องการ block อย่างน้อย 4 block/SM
+// → compiler จะพยายามลด register ให้พอดี
+__launch_bounds__(256, 4)
+__global__ void myKernel(...) {
+    // ...
+}</code></pre>
+      </div>
+
+      <div class="callout callout-orange">
+        <div class="callout-title">⚠️ Occupancy สูงไม่ได้หมายความว่าเร็วเสมอ</div>
+        สำหรับ <strong>compute-bound kernels</strong> (arithmetic หนัก เช่น matrix multiply): occupancy ต่ำแต่ arithmetic intensity สูงอาจเร็วกว่า<br>
+        สำหรับ <strong>memory-bound kernels</strong>: occupancy สำคัญมาก — ต้องซ่อน latency<br>
+        วิธีแยก: ใช้ <strong>Roofline Model</strong> ใน Nsight Compute
+      </div>
+    </div>
+
+    <!-- ========== ASYNC BARRIERS ========== -->
+    <div class="page" id="page-async-barriers">
+      <h1 class="page-title">⏳ Async Barriers & Pipelines</h1>
+      <p class="page-lead">Hardware-accelerated async primitives ที่นำมาใน Ampere (CC 8.0) และขยายใน Hopper (CC 9.0) ช่วยให้การเคลื่อนย้าย data ระหว่าง global และ shared memory ดำเนินการได้อิสระจากการรัน thread — เปิดใช้งาน compute/memory overlap ภายใน kernel เดียว</p>
+
+      <div class="section-title">ปัญหา: Synchronous Copy ทำให้ Thread หยุดรอ</div>
+      <div class="code-block">
+        <div class="code-header"><span>Pattern เดิม — thread หยุดรอตลอด copy phase</span></div>
+        <pre><code>// ❌ แบบเดิม: ทุก thread block ที่ __syncthreads()
+for (int batch = 0; batch &lt; n; batch++) {
+    shared[tid] = global[bid + tid];     // copy ผ่าน register (2 ขั้น)
+    __syncthreads();                      // thread ทั้งหมดรอ copy เสร็จ
+    compute(global_out, shared);          // คำนวณ
+    __syncthreads();
+}
+
+// ✅ Async: copy และ compute ทับซ้อนกันได้
+for (int batch = 0; batch &lt; n; batch++) {
+    cg::memcpy_async(block, shared, global + offset, block.size());  // เริ่ม async copy
+    // ทำงานอิสระได้ระหว่างนี้...
+    cg::wait(block);                      // รอเฉพาะตอนต้องใช้ data
+    compute(global_out, shared);
+    block.sync();
+}</code></pre>
+      </div>
+
+      <div class="section-title">cuda::barrier — Arrive/Wait Pattern</div>
+      <div class="callout callout-blue">
+        <div class="callout-title">💡 แนวคิดหลัก: แยก "แจ้ง" ออกจาก "รอ"</div>
+        <ul>
+          <li><code>bar.arrive()</code> — thread แจ้งว่าทำ phase นี้เสร็จแล้ว (<strong>ไม่ block!</strong>)</li>
+          <li>ระหว่าง arrive กับ wait: thread ทำงานอื่นที่ไม่ขึ้นกับ data ได้</li>
+          <li><code>bar.wait(token)</code> — block จนกว่าทุก thread <code>arrive</code> ครบ</li>
+        </ul>
+      </div>
+
+      <div class="section-title">Hardware Mechanisms ตาม CC</div>
+      <table class="data-table">
+        <thead><tr><th>Mechanism</th><th>Min CC</th><th>ทิศทาง</th><th>ขนาด</th></tr></thead>
+        <tbody>
+          <tr><td>LDGSTS (<code>cp.async</code>)</td><td>8.0 (Ampere)</td><td>Global → Shared</td><td>4/8/16 bytes</td></tr>
+          <tr><td>TMA (Tensor Memory Accelerator)</td><td>9.0 (Hopper)</td><td>Global ↔ Shared (multi-D)</td><td>Large bulk</td></tr>
+          <tr><td>STAS (<code>st.async</code>)</td><td>9.0 (Hopper)</td><td>Register → Distributed Shared</td><td>4/8 bytes</td></tr>
+          <tr><td>HW Barrier (<code>mbarrier</code>)</td><td>8.0 (Ampere)</td><td>N/A (synchronization)</td><td>any subset</td></tr>
+        </tbody>
+      </table>
+
+      <div class="section-title">Double Buffering ด้วย cuda::pipeline</div>
+      <div class="code-block">
+        <div class="code-header"><span>Double Buffering — ทับซ้อน Load Stage N+1 กับ Compute Stage N</span></div>
+        <pre><code>#include &lt;cuda/pipeline&gt;
+
+__global__ void double_buffered(T* in, T* out, int n) {
+    constexpr int STAGES = 2;
+    __shared__ T buf[STAGES][BLOCK];
+    auto pipe = cuda::make_pipeline();
+
+    // โหลด stage แรก
+    pipe.producer_acquire();
+    cuda::memcpy_async(buf[0], in, sizeof(T)*BLOCK, pipe);
+    pipe.producer_commit();
+
+    for (int i = 0; i &lt; n; i++) {
+        // โหลด stage ถัดไป ขณะที่คำนวณ stage ปัจจุบัน
+        pipe.producer_acquire();
+        if (i+1 &lt; n) cuda::memcpy_async(buf[(i+1)%2], in+(i+1)*BLOCK, sizeof(T)*BLOCK, pipe);
+        pipe.producer_commit();
+
+        pipe.consumer_wait();              // รอ stage i เสร็จ
+        compute(out + i*BLOCK, buf[i%2]); // คำนวณด้วย data stage i
+        pipe.consumer_release();
+    }
+}</code></pre>
+      </div>
+    </div>
+
+    <!-- ========== MULTI-GPU ========== -->
+    <div class="page" id="page-multi-gpu">
+      <h1 class="page-title">🖥️ Multi-GPU Programming</h1>
+      <p class="page-lead">Multi-GPU programming ช่วยแก้ปัญหาที่ใหญ่เกินกว่า GPU เดียวจะรองรับ CUDA ให้ host API, driver infrastructure, และ hardware technology สำหรับการประสานงานระหว่าง GPU</p>
+
+      <div class="section-title">การจัดการ Device</div>
+      <div class="code-block">
+        <div class="code-header"><span>Device Enumeration และ Selection</span></div>
+        <pre><code>int deviceCount;
+cudaGetDeviceCount(&deviceCount);
+
+for (int dev = 0; dev &lt; deviceCount; dev++) {
+    cudaDeviceProp prop;
+    cudaGetDeviceProperties(&prop, dev);
+    printf("GPU %d: %s (CC %d.%d, %d SMs, %.1f GB)\n",
+           dev, prop.name, prop.major, prop.minor,
+           prop.multiProcessorCount,
+           prop.totalGlobalMem / 1e9);
+}
+
+// เลือก GPU ที่ต้องการทำงานด้วย
+cudaSetDevice(0);
+float* d_ptr;
+cudaMalloc(&d_ptr, size);   // allocate บน GPU 0
+MyKernel&lt;&lt;&lt;grid, block&gt;&gt;&gt;(d_ptr);  // รันบน GPU 0</code></pre>
+      </div>
+
+      <div class="section-title">Peer-to-Peer Memory Transfer</div>
+      <div class="code-block">
+        <div class="code-header"><span>P2P Copy และ Access</span></div>
+        <pre><code>// ตรวจสอบว่า P2P ทำได้หรือไม่
+int canAccess;
+cudaDeviceCanAccessPeer(&canAccess, 0, 1);
+
+if (canAccess) {
+    // Copy โดยตรงระหว่าง GPU (ผ่าน NVLink หรือ PCIe)
+    cudaMemcpyPeer(d_gpu1, 1, d_gpu0, 0, size);
+
+    // หรือ enable peer access ให้ kernel บน GPU 1 อ่าน/เขียน memory GPU 0 ได้
+    cudaSetDevice(1);
+    cudaDeviceEnablePeerAccess(0, 0);
+    MyKernel&lt;&lt;&lt;grid, block&gt;&gt;&gt;(ptr_on_gpu0);  // kernel GPU 1 เข้าถึง GPU 0's memory
+}</code></pre>
+      </div>
+
+      <div class="section-title">NVLink vs PCIe</div>
+      <table class="data-table">
+        <thead><tr><th>Interconnect</th><th>Bandwidth</th><th>A100 SXM</th><th>H100 SXM</th></tr></thead>
+        <tbody>
+          <tr><td>NVLink 3.0</td><td>600 GB/s</td><td>✅</td><td>—</td></tr>
+          <tr><td>NVLink 4.0</td><td>900 GB/s</td><td>—</td><td>✅</td></tr>
+          <tr><td>PCIe 4.0</td><td>~32 GB/s</td><td>ทางเลือก</td><td>ทางเลือก</td></tr>
+          <tr><td>PCIe 5.0</td><td>~64 GB/s</td><td>—</td><td>ทางเลือก</td></tr>
+        </tbody>
+      </table>
+
+      <div class="section-title">Multi-GPU Collective Libraries</div>
+      <div class="three-col">
+        <div class="limit-card">
+          <div class="limit-icon">🔄</div>
+          <div class="limit-title">NCCL</div>
+          <div class="limit-body">AllReduce, Broadcast, Scatter สำหรับ ML training — ใช้ใน PyTorch DDP, TensorFlow</div>
+        </div>
+        <div class="limit-card">
+          <div class="limit-icon">🌐</div>
+          <div class="limit-title">NVSHMEM</div>
+          <div class="limit-body">PGAS programming — GPU ใช้ global address space ข้ามโหนด — เหมาะสำหรับ HPC</div>
+        </div>
+        <div class="limit-card">
+          <div class="limit-icon">📡</div>
+          <div class="limit-title">MPI + GPUDirect</div>
+          <div class="limit-body">Multi-node HPC — ส่ง data GPU→GPU โดยไม่ผ่าน CPU — latency ต่ำมาก</div>
+        </div>
+      </div>
+
+      <div class="callout callout-orange">
+        <div class="callout-title">⚠️ Linux IOMMU ต้องปิด</div>
+        บน Linux bare-metal: ต้อง <strong>ปิด IOMMU</strong> สำหรับ PCIe peer-to-peer (ถ้าเปิดจะเกิด silent data corruption)<br>
+        บน VM: เปิด IOMMU + ใช้ VFIO driver<br>
+        บน Windows: ไม่มีปัญหานี้
+      </div>
+    </div>
+
+    <!-- ========== COMPUTE CAPABILITIES ========== -->
+    <div class="page" id="page-compute-caps">
+      <h1 class="page-title">📋 Compute Capabilities Reference</h1>
+      <p class="page-lead">Compute Capability (CC) คือหมายเลขเวอร์ชันที่ระบุ feature set และขีดจำกัด hardware ของ GPU แต่ละรุ่น format: <code>major.minor</code></p>
+
+      <div class="section-title">Architecture → CC Mapping</div>
+      <table class="data-table">
+        <thead><tr><th>Architecture</th><th>CC</th><th>GPU ตัวอย่าง</th></tr></thead>
+        <tbody>
+          <tr><td>Turing</td><td>7.5</td><td>RTX 2080, Tesla T4</td></tr>
+          <tr><td>Ampere</td><td>8.0</td><td>A100 SXM/PCIe, A30</td></tr>
+          <tr><td>Ampere</td><td>8.6</td><td>RTX 3090, A10, A40</td></tr>
+          <tr><td>Ampere</td><td>8.7</td><td>Jetson AGX Orin</td></tr>
+          <tr><td>Ada Lovelace</td><td>8.9</td><td>RTX 4090, L40, L4</td></tr>
+          <tr><td>Hopper</td><td>9.0</td><td>H100 SXM/PCIe, H800</td></tr>
+          <tr><td>Blackwell</td><td>10.0</td><td>B100, B200, GB200</td></tr>
+          <tr><td>Blackwell</td><td>10.3 / 11.0 / 12.x</td><td>—</td></tr>
+        </tbody>
+      </table>
+
+      <div class="section-title">SM Limits ต่อ Compute Capability</div>
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead><tr><th>CC</th><th>Max Blocks/SM</th><th>Max Warps/SM</th><th>Max Threads/SM</th><th>FP32:FP64</th></tr></thead>
+          <tbody>
+            <tr><td>7.5</td><td>16</td><td>32</td><td>1,024</td><td>32:1</td></tr>
+            <tr><td>8.0</td><td>32</td><td>64</td><td>2,048</td><td>2:1 ✅</td></tr>
+            <tr><td>8.6</td><td>16</td><td>48</td><td>1,536</td><td>64:1</td></tr>
+            <tr><td>8.9</td><td>24</td><td>48</td><td>1,536</td><td>64:1</td></tr>
+            <tr><td>9.0</td><td>32</td><td>64</td><td>2,048</td><td>2:1 ✅</td></tr>
+            <tr><td>10.0</td><td>32</td><td>64</td><td>2,048</td><td>2:1 ✅</td></tr>
+            <tr><td>11.0</td><td>24</td><td>48</td><td>1,536</td><td>64:1</td></tr>
+            <tr><td>12.x</td><td>24</td><td>48</td><td>1,536</td><td>64:1</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-title">Memory ต่อ CC</div>
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead><tr><th>CC</th><th>Unified Cache/SM</th><th>Max Shared/SM</th><th>Max Shared/Block</th></tr></thead>
+          <tbody>
+            <tr><td>7.5</td><td>96 KB</td><td>64 KB</td><td>64 KB</td></tr>
+            <tr><td>8.0</td><td>192 KB</td><td>164 KB</td><td>163 KB</td></tr>
+            <tr><td>8.6</td><td>128 KB</td><td>100 KB</td><td>99 KB</td></tr>
+            <tr><td>8.9</td><td>128 KB</td><td>100 KB</td><td>99 KB</td></tr>
+            <tr><td>9.0</td><td>256 KB</td><td>228 KB</td><td>227 KB</td></tr>
+            <tr><td>10.x</td><td>256 KB</td><td>228 KB</td><td>227 KB</td></tr>
+            <tr><td>11.0</td><td>256 KB</td><td>228 KB</td><td>227 KB</td></tr>
+            <tr><td>12.x</td><td>128 KB</td><td>100 KB</td><td>99 KB</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-title">Tensor Core Data Types ต่อ CC</div>
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead><tr><th>CC</th><th>FP64</th><th>TF32</th><th>BF16</th><th>FP16</th><th>FP8</th><th>FP6</th><th>FP4</th><th>INT8</th></tr></thead>
+          <tbody>
+            <tr><td>7.5</td><td>—</td><td>—</td><td>—</td><td>✅</td><td>—</td><td>—</td><td>—</td><td>✅</td></tr>
+            <tr><td>8.0</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>—</td><td>—</td><td>—</td><td>✅</td></tr>
+            <tr><td>8.9</td><td>—</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>—</td><td>—</td><td>✅</td></tr>
+            <tr><td>9.0</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>—</td><td>—</td><td>✅</td></tr>
+            <tr><td>10.0</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-title">Feature Availability</div>
+      <table class="data-table">
+        <thead><tr><th>Feature</th><th>Min CC</th></tr></thead>
+        <tbody>
+          <tr><td>Independent Thread Scheduling</td><td>7.0</td></tr>
+          <tr><td><code>__shfl_sync</code>, <code>__ballot_sync</code></td><td>7.0 (required)</td></tr>
+          <tr><td>Warp reduce functions</td><td>8.0</td></tr>
+          <tr><td>BF16 Tensor Cores</td><td>8.0</td></tr>
+          <tr><td>HW async barrier (<code>mbarrier</code>)</td><td>8.0</td></tr>
+          <tr><td>LDGSTS (<code>cp.async</code>)</td><td>8.0</td></tr>
+          <tr><td>L2 Cache Residency Control</td><td>8.0</td></tr>
+          <tr><td>Thread Block Clusters</td><td>9.0</td></tr>
+          <tr><td>Distributed Shared Memory</td><td>9.0</td></tr>
+          <tr><td>TMA (Tensor Memory Accelerator)</td><td>9.0</td></tr>
+          <tr><td>FP8 Tensor Cores</td><td>8.9 / 9.0</td></tr>
+          <tr><td>FP6, FP4 Tensor Cores</td><td>10.0</td></tr>
+          <tr><td>128-bit FP operations</td><td>10.0</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ========== H100 ========== -->
+    <div class="page" id="page-h100">
+      <h1 class="page-title">🚀 NVIDIA H100</h1>
+      <p class="page-lead">H100 คือ GPU Data Center ของ NVIDIA ที่ใช้ Hopper Architecture ออกจำหน่ายปี 2022–2023 เป็น GPU หลักสำหรับ AI Training และ HPC ขนาดใหญ่ ณ ปี 2026</p>
+
+      <div class="section-title">Specifications</div>
+      <table class="data-table">
+        <thead><tr><th>Specification</th><th>H100 SXM</th><th>H100 PCIe</th></tr></thead>
+        <tbody>
+          <tr><td>Architecture</td><td colspan="2">Hopper (GH100), Compute Capability 9.0</td></tr>
+          <tr><td>Memory</td><td colspan="2">80 GB HBM3 (SXM) / HBM2e (PCIe)</td></tr>
+          <tr><td>Memory Bandwidth</td><td class="highlight">3.35 TB/s</td><td>2.0 TB/s</td></tr>
+          <tr><td>L2 Cache</td><td colspan="2">50 MB</td></tr>
+          <tr><td>Shared Memory/SM</td><td colspan="2">0–228 KB (configurable)</td></tr>
+          <tr><td>SM Count</td><td>132</td><td>114</td></tr>
+          <tr><td>FP16 Tensor (dense)</td><td>989 TFLOPS</td><td>756 TFLOPS</td></tr>
+          <tr><td>FP16 Tensor (sparse)</td><td>1,979 TFLOPS</td><td>1,513 TFLOPS</td></tr>
+          <tr><td>FP8 Tensor (sparse)</td><td>3,958 TFLOPS</td><td>3,026 TFLOPS</td></tr>
+          <tr><td>NVLink</td><td>NVLink 4.0 — 900 GB/s</td><td>—</td></tr>
+          <tr><td>TDP</td><td>700 W</td><td>350 W</td></tr>
+        </tbody>
+      </table>
+
+      <div class="section-title">นวัตกรรมหลักของ Hopper</div>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">🎯</div>
+          <div class="card-title">Transformer Engine + FP8</div>
+          <div class="card-desc">Tensor Core FP8 ใหม่ — throughput เพิ่ม 2x สำหรับ transformer models เทียบกับ A100 FP16 ด้วย per-layer precision switching อัตโนมัติ</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔗</div>
+          <div class="card-title">TMA (Tensor Memory Accelerator)</div>
+          <div class="card-desc">Hardware unit สำหรับ bulk async copy multi-dimensional tensors — GPU-side DMA engine — ลด CPU overhead และเพิ่ม SM utilization</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🏘️</div>
+          <div class="card-title">Thread Block Clusters</div>
+          <div class="card-desc">กลุ่ม block ใน GPC เดียวกัน — Distributed Shared Memory ให้ thread access shared memory ของ block อื่นได้ — ลด global memory traffic</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">⚡</div>
+          <div class="card-title">NVLink 4.0</div>
+          <div class="card-desc">900 GB/s bidirectional per GPU — DGX H100 มี 8 GPU connected ผ่าน NVLink Switch — bandwidth รวม 7.2 TB/s</div>
+        </div>
+      </div>
+
+      <div class="section-title">H100 vs A100</div>
+      <table class="data-table">
+        <thead><tr><th>Feature</th><th>A100 SXM</th><th>H100 SXM</th><th>การปรับปรุง</th></tr></thead>
+        <tbody>
+          <tr><td>Memory Type</td><td>HBM2e</td><td>HBM3</td><td>—</td></tr>
+          <tr><td>Bandwidth</td><td>~2.0 TB/s</td><td>3.35 TB/s</td><td class="highlight">+68%</td></tr>
+          <tr><td>L2 Cache</td><td>40 MB</td><td>50 MB</td><td class="highlight">+25%</td></tr>
+          <tr><td>Shared Mem/SM</td><td>164 KB</td><td>228 KB</td><td class="highlight">+39%</td></tr>
+          <tr><td>FP8 Tensor Core</td><td>ไม่มี</td><td>มี</td><td class="highlight">2x throughput</td></tr>
+          <tr><td>TMA</td><td>ไม่มี</td><td>มี</td><td class="highlight">ใหม่</td></tr>
+          <tr><td>Clusters</td><td>ไม่มี</td><td>มี</td><td class="highlight">ใหม่</td></tr>
+          <tr><td>NVLink</td><td>v3 (600 GB/s)</td><td>v4 (900 GB/s)</td><td class="highlight">+50%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ========== A100 ========== -->
+    <div class="page" id="page-a100">
+      <h1 class="page-title">💡 NVIDIA A100</h1>
+      <p class="page-lead">A100 คือ GPU Data Center ของ NVIDIA ที่ใช้ Ampere Architecture ออกจำหน่ายปี 2020 เป็น GPU ที่ครองตลาด AI/HPC ก่อน H100 และยังถูก deploy อยู่อย่างแพร่หลาย</p>
+
+      <div class="section-title">Specifications</div>
+      <table class="data-table">
+        <thead><tr><th>Specification</th><th>A100 SXM</th><th>A100 PCIe</th></tr></thead>
+        <tbody>
+          <tr><td>Architecture</td><td colspan="2">Ampere (GA100), Compute Capability 8.0</td></tr>
+          <tr><td>Memory</td><td colspan="2">80 GB HBM2e</td></tr>
+          <tr><td>Memory Bandwidth</td><td class="highlight">~2.0 TB/s</td><td>1.94 TB/s</td></tr>
+          <tr><td>L2 Cache</td><td colspan="2">40 MB</td></tr>
+          <tr><td>Shared Memory/SM</td><td colspan="2">0–164 KB (configurable)</td></tr>
+          <tr><td>SM Count</td><td colspan="2">108</td></tr>
+          <tr><td>FP16 Tensor (dense)</td><td colspan="2">312 TFLOPS</td></tr>
+          <tr><td>FP16 Tensor (sparse)</td><td colspan="2">624 TFLOPS</td></tr>
+          <tr><td>NVLink</td><td>NVLink 3.0 — 600 GB/s</td><td>—</td></tr>
+          <tr><td>TDP</td><td>400 W</td><td>250–300 W</td></tr>
+        </tbody>
+      </table>
+
+      <div class="section-title">นวัตกรรมหลักของ Ampere</div>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">🧮</div>
+          <div class="card-title">TF32 (TensorFloat-32)</div>
+          <div class="card-desc">Format ใหม่: range ของ FP32 + precision ของ FP16 — ใช้สำหรับ deep learning training ได้โดยไม่ต้องเปลี่ยนโค้ด</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">⚡</div>
+          <div class="card-title">Sparsity Support</div>
+          <div class="card-desc">Fine-grained structured sparsity (2:4) สำหรับ inference — ลด computation และ memory 2x สำหรับ sparse model weights</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔄</div>
+          <div class="card-title">Multi-Instance GPU (MIG)</div>
+          <div class="card-desc">แบ่ง A100 เป็น GPU instances อิสระสูงสุด 7 instance — แต่ละ instance มี SM, memory, cache เป็นของตัวเอง</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔗</div>
+          <div class="card-title">cp.async + mbarrier</div>
+          <div class="card-desc">LDGSTS hardware สำหรับ async copy global→shared — hardware barrier ที่ accelerated สำหรับ block scope (CC 8.0+)</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
